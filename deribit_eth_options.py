@@ -76,13 +76,13 @@ def filter_instruments(instruments: list[dict], index_price: float) -> list[dict
             continue
         if expiry_ms > max_expiry_ms:
             continue
-        # Strike within ±3% of current price
-        if strike_low <= strike <= strike_high:
+        # Strike outside ±3% of current price (above +3% or below -3%)
+        if strike >= strike_high or strike <= strike_low:
             filtered.append(inst)
 
     log.info(
         f"Filtered {len(filtered)} instruments "
-        f"(strike ${strike_low:.0f}-${strike_high:.0f}, "
+        f"(strike <=${strike_low:.0f} or >=${strike_high:.0f}, "
         f"expiry before {tomorrow_end.strftime('%Y-%m-%d %H:%M UTC')})"
     )
     return filtered
